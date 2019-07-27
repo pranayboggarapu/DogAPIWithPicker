@@ -18,3 +18,15 @@ struct DogBreedData_MyOwn: Codable {
     var message: [String: [String]]
     var status: String
 }
+
+struct DogPerBreedImages: Codable {
+    
+    var listOfImages: [String]
+    var status: String
+    
+    enum CodingKeys: String, CodingKey {
+        case listOfImages = "message"
+        case status 
+    }
+    
+}

@@ -12,14 +12,23 @@ import UIKit
 
 class DogAPI {
     
-    enum EndPoint: String {
+    enum EndPoint {
         
-        case displaySingleRandomImageFromAllDogsCollection = "https://dog.ceo/api/breeds/image/random"
-        case displayAllBreeds_MyOwn = "https://dog.ceo/api/breeds/list/all"
+        case displaySingleRandomImageFromAllDogsCollection
+        case displayAllBreeds_MyOwn
+        case displayRandomImage_PerBreed(breedValue: String)
+        
         var url: URL {
-            return URL(string: self.rawValue)!
+            return URL(string: self.stringValue)!
         }
         
+        var stringValue: String {
+            switch self {
+                case .displaySingleRandomImageFromAllDogsCollection : return "https://dog.ceo/api/breeds/image/random"
+                case .displayAllBreeds_MyOwn: return "https://dog.ceo/api/breeds/list/all"
+            case .displayRandomImage_PerBreed(let breedName): return "https://dog.ceo/api/breed/\(breedName)/images"
+            }
+        }
     }
     
     class func handleImageDownload(_ dogURL: URL, completionHandler: @escaping (UIImage?, Error?) -> Void) {
@@ -60,6 +69,21 @@ class DogAPI {
                 let decoder = JSONDecoder()
                 let allBreedsData = try decoder.decode(DogBreedData_MyOwn.self, from: data)
                 completionHandler(Array<String>(allBreedsData.message.keys), nil)
+            } catch {
+                print(error)
+                completionHandler(nil, error)
+            }
+        }
+        task.resume()
+    }
+    
+    class func gradRandomImageByBreed(_ endPointURL: URL, completionHandler: @escaping (URL?, Error?) -> Void) {
+        let task = URLSession.shared.dataTask(with: endPointURL) { (data, response, error) in
+            guard let data = data else {return}
+            do {
+                let decoder = JSONDecoder()
+                let breedData = try decoder.decode(DogPerBreedImages.self, from: data)
+                completionHandler(URL(string: breedData.listOfImages.randomElement()!), nil)
             } catch {
                 print(error)
                 completionHandler(nil, error)

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-class AllBreeds_MyOwn: ViewController {
+class AllBreeds_MyOwn: UIViewController {
     
     var allBreedsData: [String] = []
     
@@ -34,7 +34,7 @@ class AllBreeds_MyOwn: ViewController {
         pickerView.backgroundColor = .yellow
         view.addSubview(pickerView)
         pickerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100).isActive = true
-        pickerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
+        pickerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50).isActive = true
         pickerView.widthAnchor.constraint(equalToConstant: 200).isActive = true
         pickerView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         pickerView.delegate = self
@@ -55,7 +55,6 @@ class AllBreeds_MyOwn: ViewController {
         guard let data = data else {
             print(error)
             return
-            
         }
         allBreedsData = data
         print(allBreedsData)
